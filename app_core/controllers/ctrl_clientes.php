@@ -54,9 +54,13 @@ switch ($accion) {
         break;
 
     case "listar":
-    default:
-        $lista = $cliente->obtenerClientes();
-        include(__VWS_PATH . "clientes/lista_clientes.php"); // Vista para mostrar lista
+        $nombre = $_GET['nombre'] ?? "";
+        $telefono = $_GET['telefono'] ?? "";
+        $correo = $_GET['correo'] ?? "";
+        
+        $lista = $cliente->obtenerClientes($nombre, $telefono, $correo);
+        include(__VWS_PATH . "clientes/lista_clientes.php"); // ¡Importante que pase $nombre, $telefono, $correo!
         break;
+            
 }
 ?>

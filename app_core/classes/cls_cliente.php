@@ -23,12 +23,40 @@ class cls_Cliente {
     /**
      * Lista todos los clientes
      */
-    public function obtenerClientes(): array {
-        $sql = "SELECT * FROM clientes ORDER BY nombre_completo ASC";
-        $result = $this->db->sql_execute($sql);
-
+    public function obtenerClientes(string $nombre = "", string $telefono = "", string $correo = ""): array {
+        $sql = "SELECT * FROM clientes WHERE 1=1";
+        $params = [];
+        $types = "";
+    
+        if (!empty($nombre)) {
+            $sql .= " AND nombre_completo LIKE ?";
+            $params[] = "%" . $nombre . "%";
+            $types .= "s";
+        }
+    
+        if (!empty($telefono)) {
+            $sql .= " AND telefono LIKE ?";
+            $params[] = "%" . $telefono . "%";
+            $types .= "s";
+        }
+    
+        if (!empty($correo)) {
+            $sql .= " AND correo LIKE ?";
+            $params[] = "%" . $correo . "%";
+            $types .= "s";
+        }
+    
+        $sql .= " ORDER BY nombre_completo ASC";
+    
+        if (empty($params)) {
+            $result = $this->db->sql_execute($sql);
+        } else {
+            $result = $this->db->sql_execute_prepared($sql, $types, $params);
+        }
+    
         return ($result) ? $this->db->sql_get_rows_assoc($result) : [];
     }
+    
 
     /**
      * Obtener un cliente por ID
