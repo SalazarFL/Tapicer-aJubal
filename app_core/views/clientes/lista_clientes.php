@@ -11,7 +11,7 @@ $html = new cls_Html();
     <?= $html->html_css_header(__CSS_PATH . "style.css", "all"); ?>
 </head>
 <body>
-
+<?php include(__VWS_PATH . "navbar.php"); ?>
     <h2>Gestion de clientes</h2>
 
         <form id="form-filtro-clientes" class="form-filtro">
@@ -67,6 +67,6 @@ $html = new cls_Html();
     const BASE_AJAX_CLIENTES_ACCIONES = "<?= __CTR_HOST_PATH ?>ajax_clientes_acciones.php";
     </script>
 <?= $html->html_js_header(__JS_PATH . "scripts.js"); ?>
-
+<?php include(__VWS_PATH . "footer.php"); ?>
 </body>
 </html>

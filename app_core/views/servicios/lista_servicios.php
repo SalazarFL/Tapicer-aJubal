@@ -11,7 +11,7 @@ $html = new cls_Html();
     <?= $html->html_css_header(__CSS_PATH . "style.css", "all"); ?>
 </head>
 <body>
-
+<?php include(__VWS_PATH . "navbar.php"); ?>
 <h2>Listado de Servicios</h2>
 
 <div class="acciones-reporte">
@@ -47,6 +47,6 @@ $html = new cls_Html();
         <?php endif; ?>
     </tbody>
 </table>
-
+<?php include(__VWS_PATH . "footer.php"); ?>
 </body>
 </html>

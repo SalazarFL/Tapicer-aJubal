@@ -12,7 +12,7 @@ $html = new cls_Html();
     <?= $html->html_css_header(__CSS_PATH . "style.css", "all"); ?>
 </head>
 <body>
-
+<?php include(__VWS_PATH . "navbar.php"); ?>
 <h2>Menú de Reportes 📑</h2>
 
 <div class="contenedor-reportes">
@@ -76,6 +76,7 @@ $html = new cls_Html();
     display: inline-block;
 }
 </style>
-
+<?php include(__VWS_PATH . "footer.php"); ?>
 </body>
+
 </html>
