@@ -11,10 +11,17 @@ $html = new cls_Html();
     <a href="<?= __CTR_HOST_PATH ?>ctrl_servicios.php?accion=listar">💼 Servicios</a>
     <a href="<?= __CTR_HOST_PATH ?>ctrl_ventas.php?accion=listar">🛒 Ventas</a>
     <a href="<?= __VWS_HOST_PATH ?>reportes/reportes.php">📈 Reportes</a>
+    <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin'): ?>
+    <li><a href="<?= __VWS_HOST_PATH ?>usuarios/lista_usuarios.php">Usuarios</a></li>
+<?php endif; ?>
+<div class="navbar-right">
+    <?php if (isset($_SESSION['nombre_completo'])): ?>
+        <span style="color: white; margin-right: 10px;">👤 <?= htmlspecialchars($_SESSION['nombre_completo']); ?></span>
+    <?php endif; ?>
+    <a href="<?= __CTR_HOST_PATH ?>ctrl_logout.php">🔒 Cerrar Sesión</a>
+</div>
 
-    <div class="navbar-right">
-        <a href="<?= __VWS_HOST_PATH ?>login.php">🔒 Cerrar Sesión</a>
-    </div>
+
 </div>
 
 <style>

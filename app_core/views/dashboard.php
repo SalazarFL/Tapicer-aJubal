@@ -2,6 +2,17 @@
 require_once("../../global.php");
 require_once(__CLS_PATH . "cls_html.php");
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+// MUY IMPORTANTE para ver si hay sesión
+
+// Si no está logueado, redirigir al login
+if (!isset($_SESSION['id_usuario'])) {
+    header("Location: " . __VWS_HOST_PATH . "login.php?error=Debe iniciar sesión primero");
+    exit;
+}
+
 $html = new cls_Html();
 ?>
 
@@ -13,34 +24,35 @@ $html = new cls_Html();
     <?= $html->html_css_header(__CSS_PATH . "style.css", "all"); ?>
 </head>
 <body>
+
 <?php include(__VWS_PATH . "navbar.php"); ?>
 
-<h1>Tapicería Jubal 🛋️</h1>
+<h1>Bienvenido, <?= htmlspecialchars($_SESSION['nombre_completo']); ?> 👋</h1>
 <p style="text-align: center; font-size: 18px;">Sistema de Gestión de Clientes, Ventas, Inventario y Reportes</p>
 
 <div class="dashboard">
     <div class="card">
         <h3>📋 Clientes</h3>
         <p>Administrar clientes registrados.</p>
-        <a href="<?= __VWS_HOST_PATH ?>clientes/lista_clientes.php" class="btn btn-new">Ir a Clientes</a>
+        <a href="<?= __CTR_HOST_PATH ?>ctrl_clientes.php?accion=listar" class="btn btn-new">Ir a Clientes</a>
     </div>
 
     <div class="card">
         <h3>🛠️ Materiales</h3>
         <p>Inventario de materiales disponibles.</p>
-        <a href="<?= __VWS_HOST_PATH ?>inventario/lista_materiales.php" class="btn btn-new">Ir a Materiales</a>
+        <a href="<?= __CTR_HOST_PATH ?>ctrl_materiales.php?accion=listar" class="btn btn-new">Ir a Materiales</a>
     </div>
 
     <div class="card">
         <h3>💼 Servicios</h3>
         <p>Catálogo de servicios ofrecidos.</p>
-        <a href="<?= __VWS_HOST_PATH ?>servicios/lista_servicios.php" class="btn btn-new">Ir a Servicios</a>
+        <a href="<?= __CTR_HOST_PATH ?>ctrl_servicios.php?accion=listar" class="btn btn-new">Ir a Servicios</a>
     </div>
 
     <div class="card">
         <h3>🛒 Ventas</h3>
         <p>Gestión de ventas y trabajos.</p>
-        <a href="<?= __VWS_HOST_PATH ?>ventas/lista_ventas.php" class="btn btn-new">Ir a Ventas</a>
+        <a href="<?= __CTR_HOST_PATH ?>ctrl_ventas.php?accion=listar" class="btn btn-new">Ir a Ventas</a>
     </div>
 
     <div class="card">
@@ -92,6 +104,7 @@ h1 {
     font-size: 14px;
 }
 </style>
+
 <?php include(__VWS_PATH . "footer.php"); ?>
 
 </body>
