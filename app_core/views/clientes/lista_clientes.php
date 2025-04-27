@@ -12,7 +12,7 @@ $html = new cls_Html();
 </head>
 <body>
 
-    <h2>Listado de Clientes</h2>
+    <h2>Gestion de clientes</h2>
 
         <form id="form-filtro-clientes" class="form-filtro">
             <input type="text" name="nombre" placeholder="Buscar por nombre" class="input-filtro" value="<?= htmlspecialchars($_GET['nombre'] ?? '') ?>">
@@ -20,14 +20,14 @@ $html = new cls_Html();
             <input type="text" name="correo" placeholder="Buscar por correo" class="input-filtro" value="<?= htmlspecialchars($_GET['correo'] ?? '') ?>">
 
             <button type="submit" class="btn btn-new">🔍 Buscar</button>
-            <button type="button" id="btn-limpiar" class="btn btn-delete">♻️ Limpiar</button>
-</form>
+            <button type="submit" id="btn-limpiar" class="btn btn-delete">♻️ Limpiar</button>
+        </form>
 
 
     <div class="acciones-reporte">
         <a href="<?= __CTR_HOST_PATH ?>ctrl_reportes.php?tipo=clientes&formato=pdf" class="btn btn-pdf" target="_blank">📄 Generar PDF</a>
         <a href="<?= __CTR_HOST_PATH ?>ctrl_reportes.php?tipo=clientes&formato=excel" class="btn btn-excel">📊 Generar Excel</a>
-        <a href="form_cliente.php" class="btn btn-new">+ Nuevo Cliente</a>
+        <a href="<?= __VWS_HOST_PATH ?>clientes/form_cliente.php" class="btn btn-new">+ Nuevo Cliente</a>
     </div>
 
     <table>
@@ -51,8 +51,9 @@ $html = new cls_Html();
                         <td data-label="Dirección"><?= $cliente['direccion']; ?></td>
                         <td data-label="Correo"><?= $cliente['correo']; ?></td>
                         <td data-label="Acciones">
-                            <a href="form_cliente.php?id=<?= $cliente['id']; ?>" class="btn btn-edit">Editar</a>
-                            <a href="<?= __CTR_HOST_PATH ?>ctrl_clientes.php?accion=eliminar&id=<?= $cliente['id']; ?>" class="btn btn-delete" onclick="return confirm('¿Desea eliminar este cliente?');">Eliminar</a>
+                            <button type="button" class="btn btn-edit" onclick="window.location.href='<?= __VWS_HOST_PATH ?>clientes/form_cliente.php?id=<?= $cliente['id']; ?>'">Editar</button>
+                            <button type="button" class="btn btn-delete btn-eliminar" data-id="<?= $cliente['id']; ?>">Eliminar</button>
+                            <button type="button" class="btn btn-pdf" onclick="window.location.href='<?= __VWS_HOST_PATH ?>clientes/estado_cuenta.php?id=<?= $cliente['id']; ?>'">Estado de Cuenta</button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -63,9 +64,9 @@ $html = new cls_Html();
     </table>
     <script>
     const BASE_AJAX_CLIENTES = "<?= __CTR_HOST_PATH ?>ajax_clientes.php";
-</script>
+    const BASE_AJAX_CLIENTES_ACCIONES = "<?= __CTR_HOST_PATH ?>ajax_clientes_acciones.php";
+    </script>
 <?= $html->html_js_header(__JS_PATH . "scripts.js"); ?>
-
 
 </body>
 </html>

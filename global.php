@@ -30,13 +30,29 @@ require_once(__CLS_PATH . "cls_message.php");
 
 function my_error_handler(int $errno, string $errstr, string $errfile, int $errline): bool {
     try {
+        // Detectar si la llamada viene de AJAX
+        $is_ajax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
         $MSG = new cls_Message();
-        throw new Exception($errstr);
+
+        if ($is_ajax) {
+            // Si es AJAX, enviar error como JSON
+            header('Content-Type: application/json');
+            http_response_code(500);
+            echo json_encode([
+                'success' => false,
+                'error' => $errstr
+            ]);
+            exit;
+        } else {
+            // Si es normal, mostrar como alerta HTML
+            throw new Exception($errstr);
+        }
     } catch (Exception $e) {
         $MSG->show_message($e->getMessage(), "warning", "");
     }
-    return true; // indica que el error fue manejado
+    return true;
 }
+
 
 // ----------------------------------------------
 // INICIO DE SESIÓN
