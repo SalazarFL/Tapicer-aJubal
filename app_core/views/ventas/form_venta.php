@@ -1,36 +1,33 @@
 <?php
 require_once("../../../global.php");
 require_once(__CLS_PATH . "cls_html.php");
-require_once(__CLS_PATH . "cls_cliente.php");
-require_once(__CLS_PATH . "cls_venta.php"); // <-- Faltaba
-require_once(__CLS_PATH . "cls_usuario.php"); // <-- (por si ocupamos usuario luego)
+require_once(__CLS_PATH . "cls_venta.php");
 
 $html = new cls_Html();
-$cliente = new cls_Cliente();
 $venta = new cls_Venta();
 
-// Obtener lista de clientes
-$clientes = $cliente->obtenerClientes();
+$id_venta = intval($_GET['id'] ?? 0);
+if ($id_venta <= 0) {
+    header("Location: " . __CTR_HOST_PATH . "ctrl_ventas.php?accion=listar");
+    exit;
+}
 
-// Inicializar variables
-$id = intval($_GET['id'] ?? 0);
-$modo_editar = false;
-$ventaData = [];
-$detalles = [];
+// Obtener datos de la venta
+$datosVenta = $venta->obtenerVentaPorId($id_venta);
 
-if ($id > 0) {
-    // Si hay ID, estamos en modo de edición
-    $modo_editar = true;
-    $ventaData = $venta->obtenerVentaPorId($id);
-    $detalles = $venta->obtenerDetalleVenta($id);
+// Si no existe la venta, redirigir
+if (!$datosVenta) {
+    header("Location: " . __CTR_HOST_PATH . "ctrl_ventas.php?accion=listar");
+    exit;
+}
 
-    // Si no existe esa venta, redirigimos
-    if (!$ventaData) {
-        header("Location: " . __CTR_HOST_PATH . "ctrl_ventas.php?accion=listar");
-        exit;
-    }
+// Validar si la venta ya está pagada
+if ($datosVenta['estado'] === 'pagado') {
+    echo "<script>alert('Esta venta ya está pagada. No se pueden registrar más abonos.'); window.location.href = '" . __CTR_HOST_PATH . "ctrl_ventas.php?accion=detalle&id=" . $id_venta . "';</script>";
+    exit;
 }
 ?>
+
 
 
 <!DOCTYPE html>
