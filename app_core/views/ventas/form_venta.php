@@ -1,6 +1,40 @@
 <?php
 require_once("../../../global.php");
 require_once(__CLS_PATH . "cls_html.php");
+require_once(__CLS_PATH . "cls_cliente.php");
+require_once(__CLS_PATH . "cls_venta.php"); // <-- Faltaba
+require_once(__CLS_PATH . "cls_usuario.php"); // <-- (por si ocupamos usuario luego)
+
+$html = new cls_Html();
+$cliente = new cls_Cliente();
+$venta = new cls_Venta();
+
+// Obtener lista de clientes
+$clientes = $cliente->obtenerClientes();
+
+// Inicializar variables
+$id = intval($_GET['id'] ?? 0);
+$modo_editar = false;
+$ventaData = [];
+$detalles = [];
+
+
+
+if ($id > 0) {
+    // Si hay ID, estamos en modo de edición
+    $modo_editar = true;
+    $ventaData = $venta->obtenerVentaPorId($id);
+    $detalles = $venta->obtenerDetalleVenta($id);
+
+    // Si no existe esa venta, redirigimos
+    if (!$ventaData) {
+        header("Location: " . __CTR_HOST_PATH . "ctrl_ventas.php?accion=listar");
+        exit;
+    }
+}
+
+require_once("../../../global.php");
+require_once(__CLS_PATH . "cls_html.php");
 require_once(__CLS_PATH . "cls_venta.php");
 
 $html = new cls_Html();
@@ -26,8 +60,9 @@ if ($datosVenta['estado'] === 'pagado') {
     echo "<script>alert('Esta venta ya está pagada. No se pueden registrar más abonos.'); window.location.href = '" . __CTR_HOST_PATH . "ctrl_ventas.php?accion=detalle&id=" . $id_venta . "';</script>";
     exit;
 }
-?>
 
+
+?>
 
 
 <!DOCTYPE html>
