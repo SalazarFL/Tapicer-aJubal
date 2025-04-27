@@ -30,6 +30,15 @@ class cls_Mysql {
         return $this->conn;
     }
 
+    
+    /**
+     * Obtener el último ID insertado
+     */
+    public function sql_get_last_insert_id(): int {
+        return $this->conn->insert_id;
+    }
+
+
     /**
      * Ejecuta una consulta SQL directa
      */
