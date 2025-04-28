@@ -1,5 +1,5 @@
 <?php
-require_once("../../global.php"); // Ajusta si estás en otra ruta
+require_once("../../global.php"); 
 require_once(__CLS_PATH . "cls_cliente.php");
 require_once(__CLS_PATH . "cls_message.php");
 
@@ -59,7 +59,7 @@ switch ($accion) {
         $correo = $_GET['correo'] ?? "";
         
         $lista = $cliente->obtenerClientes($nombre, $telefono, $correo);
-        include(__VWS_PATH . "clientes/lista_clientes.php"); // ¡Importante que pase $nombre, $telefono, $correo!
+        include(__VWS_PATH . "clientes/lista_clientes.php"); 
         break;
             
 }

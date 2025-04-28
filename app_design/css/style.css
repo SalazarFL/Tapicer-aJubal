@@ -16,47 +16,45 @@ body {
     color: #333;
 }
 
+/* Títulos */
 h1, h2, h3, h4, h5 {
     color: var(--blood-red);
     margin-bottom: 1rem;
+    text-align: center;
 }
 
-
-/* Botones */
+/* Estilos para botones */
 .btn {
     padding: 0.4rem 0.8rem;
     margin: 0.25rem;
     border: none;
     cursor: pointer;
     font-weight: bold;
-    color: #fff;
     border-radius: 4px;
     text-decoration: none;
     display: inline-block;
-    transition: all 0.3s ease;       
+    transition: all 0.3s ease;
+    color: #fff;
 }
 
 .btn:hover {
     opacity: 0.85;
 }
 
+/* Diferentes tipos de botones */
 .btn-new {
     background-color: var(--saffron);
     color: #000;
 }
-
 .btn-edit {
     background-color: var(--brown);
 }
-
 .btn-delete {
     background-color: var(--blood-red);
 }
-
 .btn-pdf {
     background-color: var(--ochre);
 }
-
 .btn-excel {
     background-color: var(--aureolin);
     color: #000;
@@ -69,43 +67,53 @@ table {
     margin-top: 1rem;
     background-color: #fff;
 }
-
 th, td {
     border: 1px solid var(--saffron);
     padding: 0.75rem;
     text-align: left;
 }
-
 th {
     background-color: var(--ochre);
     color: white;
 }
-
 tr:nth-child(even) {
     background-color: #fff9e3;
 }
 
-
-
-/* Formularios */
+/* Inputs y selects generales */
 input[type="text"],
 input[type="email"],
 input[type="number"],
+input[type="password"],
 textarea,
 select {
     width: 100%;
     padding: 0.5rem;
-    margin: 0.5rem 0;
+    margin-top: 0.3rem;
+    margin-bottom: 1rem;
     border: 1px solid var(--saffron);
     border-radius: 4px;
     box-sizing: border-box;
+    background-color: #fffef3;
 }
 
-
-input[type="submit"]:hover, button[type="submit"]:hover {
+/* Botones de formularios */
+input[type="submit"]:hover,
+button[type="submit"]:hover {
     background-color: var(--blood-red);
 }
 
+/* Formularios organizados */
+form {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Filtros de búsqueda */
 .form-filtro {
     display: flex;
     flex-wrap: wrap;
@@ -113,17 +121,13 @@ input[type="submit"]:hover, button[type="submit"]:hover {
     margin-bottom: 1rem;
     align-items: center;
 }
-
-
 input.input-filtro {
     padding: 0.3rem 0.5rem;
     border: 1px solid var(--saffron);
     border-radius: 4px;
-    width: 180px; /* o el que prefieras */
+    width: 180px;
     font-size: 0.9rem;
 }
-
-
 
 /* Mensajes del sistema */
 .alert {
@@ -131,27 +135,24 @@ input.input-filtro {
     margin-bottom: 1rem;
     border-radius: 4px;
 }
-
 .alert-success {
     background-color: #d4edda;
     color: #155724;
 }
-
 .alert-danger {
     background-color: #f8d7da;
     color: #721c24;
 }
-
 .alert-warning {
     background-color: #fff3cd;
     color: #856404;
 }
-
 .alert-info {
     background-color: #d1ecf1;
     color: #0c5460;
 }
-/* --- Responsive design para móviles y tablets --- */
+
+/* Responsive design para móviles */
 @media (max-width: 768px) {
     body {
         padding: 1rem;
@@ -163,7 +164,7 @@ input.input-filtro {
     }
 
     thead tr {
-        display: none; /* Oculta encabezado original en móvil */
+        display: none;
     }
 
     tr {
@@ -203,67 +204,35 @@ input.input-filtro {
     }
 }
 
+/* Menú principal */
 .menu-principal {
     background-color: var(--brown);
     padding: 1rem;
     display: flex;
     gap: 1rem;
 }
-
 .menu-principal a {
     color: white;
     text-decoration: none;
     font-weight: bold;
     font-size: 1rem;
 }
-
 .menu-principal a:hover {
     text-decoration: underline;
 }
 
-/* CONTENEDORES para centrar contenido */
+/* Contenedor general */
 .contenedor {
-    max-width: 800px; /* Ancho máximo */
-    margin: 0 auto;   /* Centrado automático */
+    max-width: 800px;
+    margin: 0 auto;
     padding: 2rem;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Formularios mejorados */
-form {
-    max-width: 700px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-/* Inputs y selects */
-input[type="text"],
-input[type="email"],
-input[type="number"],
-input[type="password"],
-textarea,
-select {
-    width: 100%;
-    padding: 0.5rem;
-    margin-top: 0.3rem;
-    margin-bottom: 1rem;
-    border: 1px solid var(--saffron);
-    border-radius: 4px;
-    box-sizing: border-box;
-    background-color: #fffef3;
-}
-
-/* Botones dentro de formularios */
+/* Acciones de formularios */
 .acciones-formulario {
     text-align: center;
     margin-top: 1rem;
-}
-
-h1, h2, h3 {
-    text-align: center;
 }

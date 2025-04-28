@@ -3,23 +3,24 @@ require_once("../../../global.php");
 require_once(__CLS_PATH . "cls_html.php");
 require_once(__CLS_PATH . "cls_cliente.php");
 require_once(__CLS_PATH . "cls_venta.php");
-require_once(__CLS_PATH . "cls_servicio.php"); // Añadir esta línea
+require_once(__CLS_PATH . "cls_servicio.php");
 
 $html = new cls_Html();
-$cliente = new cls_CLIente();
+$cliente = new cls_Cliente();
 $venta = new cls_Venta();
-$servicio = new cls_Servicio(); // Crear objeto
-$servicios = $servicio->obtenerServicios(); // Obtener lista de servicios
+$servicio = new cls_Servicio();
 
-// Obtener lista de clientes
+// Obtenemos todos los servicios y clientes
+$servicios = $servicio->obtenerServicios();
 $clientes = $cliente->obtenerClientes();
 
-// Variables iniciales
+// Inicializamos variables
 $id = intval($_GET['id'] ?? 0);
 $modo_editar = false;
 $ventaData = [];
 $detalles = [];
 
+// Si se envía ID, es modo editar
 if ($id > 0) {
     $modo_editar = true;
     $ventaData = $venta->obtenerVentaPorId($id);
@@ -63,63 +64,65 @@ if ($id > 0) {
 
     <h3>Detalles del Trabajo</h3>
     <div id="trabajos-container">
-    <?php if ($modo_editar && !empty($detalles)): ?>
-        <?php foreach ($detalles as $detalle): ?>
+        <?php if ($modo_editar && !empty($detalles)): ?>
+            <?php foreach ($detalles as $detalle): ?>
+                <!-- Formulario de un trabajo existente -->
+                <div class="trabajo">
+                    <label>Tipo de Trabajo:</label>
+                    <select name="tipo_trabajo[]" required>
+                        <option value="">Seleccione un servicio</option>
+                        <?php foreach ($servicios as $serv): ?>
+                            <option value="<?= htmlspecialchars($serv['nombre']); ?>">
+                                <?= htmlspecialchars($serv['nombre']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <label>Descripción:</label>
+                    <textarea name="descripcion[]" required><?= htmlspecialchars($detalle['descripcion']) ?></textarea>
+
+                    <label>Medidas:</label>
+                    <input type="text" name="medidas[]" value="<?= htmlspecialchars($detalle['medidas']) ?>">
+
+                    <label>Materiales Usados:</label>
+                    <textarea name="materiales_usados[]"><?= htmlspecialchars($detalle['materiales_usados']) ?></textarea>
+
+                    <label>Costo Mano de Obra:</label>
+                    <input type="number" name="costo_mano_obra[]" step="0.01" value="<?= htmlspecialchars($detalle['costo_mano_obra']) ?>" required>
+
+                    <button type="button" class="btn btn-delete btn-quitar-trabajo">Quitar Trabajo</button>
+                    <hr>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <!-- Formulario de un trabajo nuevo -->
             <div class="trabajo">
-            <label>Tipo de Trabajo:</label>
-<select name="tipo_trabajo[]" required>
-    <option value="">Seleccione un servicio</option>
-    <?php foreach ($servicios as $serv): ?>
-        <option value="<?= htmlspecialchars($serv['nombre']); ?>">
-            <?= htmlspecialchars($serv['nombre']); ?>
-        </option>
-    <?php endforeach; ?>
-</select>
+                <label>Tipo de Trabajo:</label>
+                <select name="tipo_trabajo[]" required>
+                    <option value="">Seleccione un servicio</option>
+                    <?php foreach ($servicios as $serv): ?>
+                        <option value="<?= htmlspecialchars($serv['nombre']); ?>">
+                            <?= htmlspecialchars($serv['nombre']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
 
                 <label>Descripción:</label>
-                <textarea name="descripcion[]" required><?= htmlspecialchars($detalle['descripcion']) ?></textarea>
+                <textarea name="descripcion[]" required></textarea>
 
                 <label>Medidas:</label>
-                <input type="text" name="medidas[]" value="<?= htmlspecialchars($detalle['medidas']) ?>">
+                <input type="text" name="medidas[]">
 
                 <label>Materiales Usados:</label>
-                <textarea name="materiales_usados[]"><?= htmlspecialchars($detalle['materiales_usados']) ?></textarea>
+                <textarea name="materiales_usados[]"></textarea>
 
                 <label>Costo Mano de Obra:</label>
-                <input type="number" name="costo_mano_obra[]" step="0.01" value="<?= htmlspecialchars($detalle['costo_mano_obra']) ?>" required>
+                <input type="number" name="costo_mano_obra[]" step="0.01" required>
 
                 <button type="button" class="btn btn-delete btn-quitar-trabajo">Quitar Trabajo</button>
                 <hr>
             </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <div class="trabajo">
-            <label>Tipo de Trabajo:</label>
-            <select name="tipo_trabajo[]" required>
-    <option value="">Seleccione un servicio</option>
-    <?php foreach ($servicios as $serv): ?>
-        <option value="<?= htmlspecialchars($serv['nombre']); ?>">
-            <?= htmlspecialchars($serv['nombre']); ?>
-        </option>
-    <?php endforeach; ?>
-</select>
-
-            <label>Descripción:</label>
-            <textarea name="descripcion[]" required></textarea>
-
-            <label>Medidas:</label>
-            <input type="text" name="medidas[]">
-
-            <label>Materiales Usados:</label>
-            <textarea name="materiales_usados[]"></textarea>
-
-            <label>Costo Mano de Obra:</label>
-            <input type="number" name="costo_mano_obra[]" step="0.01" required>
-
-            <button type="button" class="btn btn-delete btn-quitar-trabajo">Quitar Trabajo</button>
-            <hr>
-        </div>
-    <?php endif; ?>
+        <?php endif; ?>
     </div>
 
     <button type="button" class="btn btn-new" id="btn-agregar-trabajo">+ Agregar Otro Trabajo</button>
@@ -132,19 +135,18 @@ if ($id > 0) {
     </div>
 </form>
 
+<!-- Scripts para agregar, quitar trabajos y calcular total -->
 <script>
-// Script para agregar más trabajos
 document.getElementById('btn-agregar-trabajo').addEventListener('click', function () {
     const container = document.getElementById('trabajos-container');
     const trabajoOriginal = container.querySelector('.trabajo');
     const nuevoTrabajo = trabajoOriginal.cloneNode(true);
 
-    // Limpiar campos (inputs, textareas y selects)
     nuevoTrabajo.querySelectorAll('input, textarea, select').forEach(el => {
         if (el.tagName.toLowerCase() === 'select') {
-            el.selectedIndex = 0; // Para selects: volver a la opción inicial
+            el.selectedIndex = 0;
         } else {
-            el.value = ""; // Para inputs y textareas: limpiar texto
+            el.value = "";
         }
     });
 
@@ -153,7 +155,6 @@ document.getElementById('btn-agregar-trabajo').addEventListener('click', functio
     actualizarBotonesQuitar();
 });
 
-// Script para quitar trabajos
 function actualizarBotonesQuitar() {
     document.querySelectorAll('.btn-quitar-trabajo').forEach(btn => {
         btn.onclick = function () {
@@ -168,7 +169,6 @@ function actualizarBotonesQuitar() {
 }
 actualizarBotonesQuitar();
 
-// Script para calcular total automáticamente
 document.getElementById('form-venta').addEventListener('input', calcularTotal);
 
 function calcularTotal() {
@@ -179,8 +179,6 @@ function calcularTotal() {
     document.getElementById('total-general').innerText = total.toFixed(2);
 }
 </script>
-
-
 
 <?php include(__VWS_PATH . "footer.php"); ?>
 </body>

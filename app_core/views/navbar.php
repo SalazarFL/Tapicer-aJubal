@@ -1,4 +1,5 @@
 <?php
+// Cargamos clase HTML
 require_once(__CLS_PATH . "cls_html.php");
 $html = new cls_Html();
 ?>
@@ -11,21 +12,23 @@ $html = new cls_Html();
     <a href="<?= __CTR_HOST_PATH ?>ctrl_servicios.php?accion=listar">💼 Servicios</a>
     <a href="<?= __CTR_HOST_PATH ?>ctrl_ventas.php?accion=listar">🛒 Ventas</a>
     <a href="<?= __VWS_HOST_PATH ?>reportes/reportes.php">📈 Reportes</a>
+
+    <!-- Mostrar opción de usuarios solo si el rol es admin -->
     <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin'): ?>
-    <li><a href="<?= __VWS_HOST_PATH ?>usuarios/lista_usuarios.php">Usuarios</a></li>
-<?php endif; ?>
-<div class="navbar-right">
-    <?php if (isset($_SESSION['nombre_completo'])): ?>
-        <span style="color: white; margin-right: 10px;">👤 <?= htmlspecialchars($_SESSION['nombre_completo']); ?></span>
+        <li><a href="<?= __VWS_HOST_PATH ?>usuarios/lista_usuarios.php">Usuarios</a></li>
     <?php endif; ?>
-    <a href="<?= __CTR_HOST_PATH ?>ctrl_logout.php">🔒 Cerrar Sesión</a>
+
+    <div class="navbar-right">
+        <!-- Mostrar nombre del usuario -->
+        <?php if (isset($_SESSION['nombre_completo'])): ?>
+            <span style="color: white; margin-right: 10px;">👤 <?= htmlspecialchars($_SESSION['nombre_completo']); ?></span>
+        <?php endif; ?>
+        <a href="<?= __CTR_HOST_PATH ?>ctrl_logout.php">🔒 Cerrar Sesión</a>
+    </div>
 </div>
 
-
-</div>
-
+<!-- Estilos internos para el navbar -->
 <style>
-    /* Estilos rápidos para Navbar */
     .navbar {
         background-color: #a63c06;
         overflow: hidden;

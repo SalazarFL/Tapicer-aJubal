@@ -1,5 +1,5 @@
 <?php
-require_once("../../global.php"); // Siempre para que cargue rutas
+require_once("../../global.php"); 
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

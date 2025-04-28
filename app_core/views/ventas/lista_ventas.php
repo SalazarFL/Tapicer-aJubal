@@ -8,10 +8,13 @@ $html = new cls_Html();
 <head>
     <meta charset="UTF-8">
     <title>Lista de Ventas</title>
+    <!-- Agregamos hoja de estilos -->
     <?= $html->html_css_header(__CSS_PATH . "style.css", "all"); ?>
 </head>
 <body>
+
 <?php include(__VWS_PATH . "navbar.php"); ?>
+
 <h2>Listado de Ventas</h2>
 
 <div class="acciones-reporte">
@@ -41,6 +44,7 @@ $html = new cls_Html();
                     <td data-label="Estado"><?= ucfirst($venta['estado']); ?></td>
                     <td data-label="Total">₡ <?= number_format($venta['total'], 2); ?></td>
                     <td data-label="Acciones">
+                        <!-- Botones para editar, eliminar y ver detalle -->
                         <a href="<?= __VWS_HOST_PATH ?>ventas/form_venta.php?id=<?= $venta['id']; ?>" class="btn btn-edit">Editar</a>
                         <a href="<?= __CTR_HOST_PATH ?>ctrl_ventas.php?accion=eliminar&id=<?= $venta['id']; ?>" class="btn btn-delete" onclick="return confirm('¿Desea eliminar esta venta?');">Eliminar</a>
                         <a href="<?= __VWS_HOST_PATH ?>ventas/detalle_venta.php?id=<?= $venta['id']; ?>" class="btn btn-pdf">Detalle</a>
@@ -52,6 +56,7 @@ $html = new cls_Html();
         <?php endif; ?>
     </tbody>
 </table>
+
 <?php include(__VWS_PATH . "footer.php"); ?>
 </body>
 </html>

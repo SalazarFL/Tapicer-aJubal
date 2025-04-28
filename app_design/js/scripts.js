@@ -1,6 +1,7 @@
+// Confirmamos que el script está cargado
 console.log("scripts.js está funcionando");
 
-// Función para asignar eventos a botones de eliminar
+// Función para asignar eventos a los botones de eliminar
 function asignarEventosBotones() {
     document.querySelectorAll('.btn-eliminar').forEach(function (boton) {
         boton.addEventListener('click', function () {
@@ -11,7 +12,7 @@ function asignarEventosBotones() {
                 })
                 .then(async response => {
                     const contentType = response.headers.get("content-type");
-                    
+
                     if (!response.ok) {
                         console.error('Respuesta del servidor no OK.');
                         throw new Error('Error en el servidor.');
@@ -28,12 +29,11 @@ function asignarEventosBotones() {
                 .then(data => {
                     if (data.success) {
                         alert('Cliente eliminado correctamente.');
-                        location.reload(); // Recargar para actualizar lista
+                        location.reload(); // Refrescamos la página
                     } else {
                         alert(data.error || 'Error al eliminar el cliente.');
                     }
                 })
-                
                 .catch(error => {
                     console.error('Error en fetch:', error);
                     alert('Error al eliminar el cliente.');
@@ -43,8 +43,7 @@ function asignarEventosBotones() {
     });
 }
 
-
-// Función para cargar vistas dinámicamente (si la usas)
+// Función para cargar vistas dinámicamente (opcional)
 function cargarVista(vista) {
     fetch(`app_core/views/${vista}.php`)
         .then(response => {
@@ -62,12 +61,13 @@ function cargarVista(vista) {
         });
 }
 
-// Esperar que el documento esté listo
+// Ejecutar cuando el documento esté cargado
 document.addEventListener("DOMContentLoaded", function () {
     const formFiltro = document.getElementById('form-filtro-clientes');
     const btnLimpiar = document.getElementById('btn-limpiar');
 
     if (formFiltro) {
+        // Envío del formulario de filtros
         formFiltro.addEventListener('submit', function (e) {
             e.preventDefault();
             const formData = new FormData(formFiltro);
@@ -77,13 +77,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(res => res.text())
                 .then(data => {
                     document.querySelector('tbody').innerHTML = data;
-                    asignarEventosBotones(); // Reasignar eventos
+                    asignarEventosBotones(); // Volver a asignar eventos
                 })
                 .catch(err => console.error("Error AJAX:", err));
         });
     }
 
     if (btnLimpiar) {
+        // Limpiar el formulario de filtros
         btnLimpiar.addEventListener('click', function () {
             formFiltro.reset();
 
@@ -91,12 +92,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(res => res.text())
                 .then(data => {
                     document.querySelector('tbody').innerHTML = data;
-                    asignarEventosBotones(); // Reasignar eventos
+                    asignarEventosBotones(); // Volver a asignar eventos
                 })
                 .catch(err => console.error("Error AJAX:", err));
         });
     }
 
-    // Al cargar la página también se asignan los eventos iniciales
+    // Asignar eventos a los botones al cargar la página
     asignarEventosBotones();
 });

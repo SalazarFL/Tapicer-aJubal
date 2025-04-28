@@ -2,12 +2,12 @@
 require_once("../../global.php");
 require_once(__CLS_PATH . "cls_html.php");
 
+// Iniciar sesión si no está activa
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// MUY IMPORTANTE para ver si hay sesión
 
-// Si no está logueado, redirigir al login
+// Verificar que el usuario esté logueado
 if (!isset($_SESSION['id_usuario'])) {
     header("Location: " . __VWS_HOST_PATH . "login.php?error=Debe iniciar sesión primero");
     exit;
@@ -31,6 +31,7 @@ $html = new cls_Html();
 <p style="text-align: center; font-size: 18px;">Sistema de Gestión de Clientes, Ventas, Inventario y Reportes</p>
 
 <div class="dashboard">
+    <!-- Tarjetas de acceso rápido -->
     <div class="card">
         <h3>📋 Clientes</h3>
         <p>Administrar clientes registrados.</p>
@@ -62,6 +63,7 @@ $html = new cls_Html();
     </div>
 </div>
 
+<!-- Estilos internos para diseño de dashboard -->
 <style>
 h1 {
     text-align: center;
