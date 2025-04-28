@@ -8,9 +8,8 @@ class cls_Venta {
         $this->db = new cls_Mysql();
     }
 
-    /**
-     * Obtener todas las ventas de un cliente específico
-     */
+    
+   // Obtener todas las ventas de un cliente específico     
     public function obtenerVentasPorCliente(int $id_cliente): array {
         $sql = "SELECT fecha, estado, total
                 FROM ventas
@@ -25,9 +24,8 @@ class cls_Venta {
         return ($result) ? $this->db->sql_get_rows_assoc($result) : [];
     }
 
-    /**
-     * Insertar una nueva venta
-     */
+    
+   //Insertar una nueva venta     
     public function insertarVenta(int $id_cliente, int $id_usuario, string $fecha, string $estado, float $total): ?int {
         $sql = "INSERT INTO ventas (id_cliente, id_usuario, fecha, estado, total) 
                 VALUES (?, ?, ?, ?, ?)";
@@ -35,14 +33,13 @@ class cls_Venta {
         $types = "iissd";
 
         if ($this->db->sql_execute_prepared_dml($sql, $types, $params)) {
-            return $this->db->sql_get_last_insert_id(); // Retorna el ID generado
+            return $this->db->sql_get_last_insert_id(); 
         }
         return null;
     }
 
-    /**
-     * Insertar un detalle de venta
-     */
+   
+    //Insertar un detalle de venta    
     public function insertarDetalleVenta(int $id_venta, string $tipo_trabajo, string $descripcion, string $medidas, string $materiales_usados, float $costo_mano_obra, float $subtotal): bool {
         $sql = "INSERT INTO detalle_ventas (id_venta, tipo_trabajo, descripcion, medidas, materiales_usados, costo_mano_obra, subtotal)
                 VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -52,9 +49,8 @@ class cls_Venta {
         return $this->db->sql_execute_prepared_dml($sql, $types, $params);
     }
 
-    /**
-     * Actualizar el total de una venta
-     */
+    
+   //Actualizar el total de una venta     
     public function actualizarTotalVenta(int $id_venta, float $nuevo_total): bool {
         $sql = "UPDATE ventas SET total = ? WHERE id = ?";
         $params = [$nuevo_total, $id_venta];
@@ -63,9 +59,8 @@ class cls_Venta {
         return $this->db->sql_execute_prepared_dml($sql, $types, $params);
     }
 
-    /**
-     * Eliminar todos los detalles de una venta
-     */
+   
+    // Eliminar todos los detalles de una venta    
     public function eliminarDetalleVenta(int $id_venta): bool {
         $sql = "DELETE FROM detalle_ventas WHERE id_venta = ?";
         $params = [$id_venta];
@@ -74,11 +69,10 @@ class cls_Venta {
         return $this->db->sql_execute_prepared_dml($sql, $types, $params);
     }
 
-    /**
-     * Eliminar una venta (primero se deben eliminar sus detalles)
-     */
+   
+    // Eliminar una venta (primero se deben eliminar sus detalles)   
     public function eliminarVenta(int $id_venta): bool {
-        $this->eliminarDetalleVenta($id_venta); // Eliminar primero detalles
+        $this->eliminarDetalleVenta($id_venta); 
         $sql = "DELETE FROM ventas WHERE id = ?";
         $params = [$id_venta];
         $types = "i";
@@ -86,9 +80,8 @@ class cls_Venta {
         return $this->db->sql_execute_prepared_dml($sql, $types, $params);
     }
 
-    /**
-     * Obtener todas las ventas
-     */
+    
+    //Obtener todas las ventas    
     public function obtenerVentas(): array {
         $sql = "SELECT v.id, v.fecha, v.estado, v.total,
                        c.nombre_completo AS nombre_cliente,
@@ -103,12 +96,11 @@ class cls_Venta {
         return ($result) ? $this->db->sql_get_rows_assoc($result) : [];
     }
 
-    /**
-     * Obtener una venta específica
-     */
+    
+   //Obtener una venta específica    
     public function obtenerVentaPorId(int $id): ?array {
         $sql = "SELECT v.id, v.fecha, v.estado, v.total, 
-                       v.id_cliente,  -- <-- Añadido aquí
+                       v.id_cliente, 
                        c.nombre_completo AS nombre_cliente, 
                        u.nombre_completo AS nombre_usuario
                 FROM ventas v
@@ -122,10 +114,9 @@ class cls_Venta {
         return ($result) ? $this->db->sql_get_fetchassoc($result) : null;
     }
     
-
-    /**
-     * Obtener los detalles de una venta específica
-     */
+   
+  // Obtener los detalles de una venta específica
+    
     public function obtenerDetalleVenta(int $id_venta): array {
         $sql = "SELECT tipo_trabajo, descripcion, medidas, materiales_usados, costo_mano_obra, subtotal 
                 FROM detalle_ventas
@@ -171,20 +162,14 @@ public function obtenerTotalAbonado(int $id_venta): float {
     return floatval($row['total_abonado'] ?? 0);
 }
 
-/**
- * Actualizar el estado de una venta
- */
+// Actualizar el estado de una venta
 public function actualizarEstadoVenta(int $id_venta, string $nuevo_estado): bool {
     $sql = "UPDATE ventas SET estado = ? WHERE id = ?";
     $params = [$nuevo_estado, $id_venta];
-    $types = "si"; // string, int
+    $types = "si";
 
     return $this->db->sql_execute_prepared_dml($sql, $types, $params);
 }
-
-
-
-
 
 }
 ?>

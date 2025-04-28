@@ -21,6 +21,7 @@ h1, h2, h3, h4, h5 {
     margin-bottom: 1rem;
 }
 
+
 /* Botones */
 .btn {
     padding: 0.4rem 0.8rem;
@@ -218,4 +219,51 @@ input.input-filtro {
 
 .menu-principal a:hover {
     text-decoration: underline;
+}
+
+/* CONTENEDORES para centrar contenido */
+.contenedor {
+    max-width: 800px; /* Ancho máximo */
+    margin: 0 auto;   /* Centrado automático */
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Formularios mejorados */
+form {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Inputs y selects */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"],
+textarea,
+select {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.3rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--saffron);
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #fffef3;
+}
+
+/* Botones dentro de formularios */
+.acciones-formulario {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+h1, h2, h3 {
+    text-align: center;
 }

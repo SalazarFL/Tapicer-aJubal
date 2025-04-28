@@ -15,4 +15,6 @@ if (!isset($_SESSION['id_usuario'])) {
 // Si hay sesión activa, redirigir a dashboard
 header("Location: app_core/views/dashboard.php");
 exit;
+
+
 ?>

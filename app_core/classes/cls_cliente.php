@@ -9,9 +9,8 @@ class cls_Cliente {
         $this->db = new cls_Mysql();
     }
 
-    /**
-     * Inserta un nuevo cliente en la base de datos
-     */
+   
+    //Inserta un nuevo cliente en la base de datos     
     public function insertarCliente(string $nombre_completo, string $telefono, string $direccion, string $correo): bool {
         $sql = "INSERT INTO clientes (nombre_completo, telefono, direccion, correo) VALUES (?, ?, ?, ?)";
         $params = [$nombre_completo, $telefono, $direccion, $correo];
@@ -20,9 +19,8 @@ class cls_Cliente {
         return $this->db->sql_execute_prepared_dml($sql, $types, $params);
     }
 
-    /**
-     * Lista todos los clientes
-     */
+    
+     //Lista todos los clientes    
     public function obtenerClientes(string $nombre = "", string $telefono = "", string $correo = ""): array {
         $sql = "SELECT * FROM clientes WHERE 1=1";
         $params = [];
@@ -58,9 +56,8 @@ class cls_Cliente {
     }
     
 
-    /**
-     * Obtener un cliente por ID
-     */
+    
+    //Obtener un cliente por ID     
     public function obtenerClientePorId(int $id): ?array {
         $sql = "SELECT * FROM clientes WHERE id = ?";
         $params = [$id];
@@ -70,9 +67,8 @@ class cls_Cliente {
         return ($result) ? $this->db->sql_get_fetchassoc($result) : null;
     }
 
-    /**
-     * Actualizar datos de un cliente
-     */
+   
+    //Actualizar datos de un cliente     
     public function actualizarCliente(int $id, string $nombre_completo, string $telefono, string $direccion, string $correo): bool {
         $sql = "UPDATE clientes SET nombre_completo = ?, telefono = ?, direccion = ?, correo = ? WHERE id = ?";
         $params = [$nombre_completo, $telefono, $direccion, $correo, $id];
@@ -81,9 +77,8 @@ class cls_Cliente {
         return $this->db->sql_execute_prepared_dml($sql, $types, $params);
     }
 
-    /**
-     * Eliminar cliente
-     */
+    
+    //Eliminar cliente    
     public function eliminarCliente(int $id): bool {
         $sql = "DELETE FROM clientes WHERE id = ?";
         $params = [$id];

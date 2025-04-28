@@ -12,9 +12,8 @@ class cls_Reporte {
         $this->db = new cls_Mysql();
     }
 
-    /**
-     * Genera un reporte en PDF o Excel desde cualquier tabla y consulta
-     */
+    
+    //Genera un reporte en PDF o Excel desde cualquier tabla y consulta    
     public function generarReporte(string $titulo, string $sql, string $formato = "pdf", array $encabezados = []) {
         $result = $this->db->sql_execute($sql);
         $datos = $this->db->sql_get_rows_assoc($result);
@@ -28,9 +27,8 @@ class cls_Reporte {
         }
     }
 
-    /**
-     * Generar PDF con TCPDF
-     */
+    
+    //Generar PDF con TCPDF     
     private function generarPDF(string $titulo, array $encabezados, array $datos) {
         $pdf = new TCPDF('L', 'mm', 'A4', true, 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
@@ -69,15 +67,15 @@ class cls_Reporte {
         $pdf->Output('reporte_' . strtolower(str_replace(" ", "_", $titulo)) . '.pdf', 'I');
     }
 
-    /**
-     * Generar Excel con PhpSpreadsheet
-     */
+    
+    // Generar Excel con PhpSpreadsheet
+     
     private function generarExcel(string $titulo, array $encabezados, array $datos) {
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle(substr($titulo, 0, 31)); // Título corto (Excel tiene límite)
+        $sheet->setTitle(substr($titulo, 0, 31)); 
 
-        // Escribir encabezados
+        //Escribir encabezados
         $col = 'A';
         foreach ($encabezados as $encabezado) {
             $sheet->setCellValue($col . '1', $encabezado);

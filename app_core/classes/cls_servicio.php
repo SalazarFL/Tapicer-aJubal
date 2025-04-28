@@ -8,9 +8,8 @@ class cls_Servicio {
         $this->db = new cls_Mysql();
     }
 
-    /**
-     * Insertar un nuevo servicio
-     */
+    
+    //Insertar un nuevo servicio     
     public function insertarServicio(string $nombre, string $descripcion, float $precio_base, int $tiempo_estimado): bool {
         $sql = "INSERT INTO servicios (nombre, descripcion, precio_base, tiempo_estimado_dias)
                 VALUES (?, ?, ?, ?)";
@@ -20,18 +19,17 @@ class cls_Servicio {
         return $this->db->sql_execute_prepared_dml($sql, $types, $params);
     }
 
-    /**
-     * Obtener todos los servicios
-     */
-    public function obtenerServicios(): array {
-        $sql = "SELECT * FROM servicios ORDER BY nombre ASC";
+   
+   //Obtener todos los servicios        
+     public function obtenerServicios(): array {
+        $sql = "SELECT id, nombre, descripcion, precio_base, tiempo_estimado_dias FROM servicios";
         $result = $this->db->sql_execute($sql);
         return ($result) ? $this->db->sql_get_rows_assoc($result) : [];
     }
+    
 
-    /**
-     * Obtener un servicio por ID
-     */
+    
+     //Obtener un servicio por ID
     public function obtenerServicioPorId(int $id): ?array {
         $sql = "SELECT * FROM servicios WHERE id = ?";
         $params = [$id];
@@ -41,9 +39,8 @@ class cls_Servicio {
         return ($result) ? $this->db->sql_get_fetchassoc($result) : null;
     }
 
-    /**
-     * Actualizar un servicio
-     */
+    
+     //Actualizar un servicio    
     public function actualizarServicio(int $id, string $nombre, string $descripcion, float $precio_base, int $tiempo_estimado): bool {
         $sql = "UPDATE servicios 
                 SET nombre = ?, descripcion = ?, precio_base = ?, tiempo_estimado_dias = ?
@@ -54,9 +51,8 @@ class cls_Servicio {
         return $this->db->sql_execute_prepared_dml($sql, $types, $params);
     }
 
-    /**
-     * Eliminar un servicio
-     */
+    
+    //Eliminar un servicio    
     public function eliminarServicio(int $id): bool {
         $sql = "DELETE FROM servicios WHERE id = ?";
         $params = [$id];
@@ -64,5 +60,7 @@ class cls_Servicio {
 
         return $this->db->sql_execute_prepared_dml($sql, $types, $params);
     }
+      
+
 }
 ?>

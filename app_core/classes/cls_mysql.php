@@ -9,9 +9,8 @@ class cls_Mysql {
 
     public function __construct() {}
 
-    /**
-     * Establece la conexión con la base de datos
-     */
+   
+    //Establece la conexión con la base de datos     
     public function db_connect(): mysqli {
         if ($this->conn === null) {
             try {
@@ -31,18 +30,15 @@ class cls_Mysql {
     }
 
     
-    /**
-     * Obtener el último ID insertado
-     */
+    //Obtener el último ID insertado     
     public function sql_get_last_insert_id(): int {
         return $this->conn->insert_id;
     }
 
 
-    /**
-     * Ejecuta una consulta SQL directa
-     */
-    public function sql_execute(string $sql) {
+    
+    //Ejecuta una consulta SQL directa
+        public function sql_execute(string $sql) {
         try {
             $result = $this->db_connect()->query($sql);
 
@@ -58,9 +54,8 @@ class cls_Mysql {
         }
     }
 
-    /**
-     * Consulta preparada: SELECT con parámetros
-     */
+    
+     //Consulta preparada: SELECT con parámetros     
     public function sql_execute_prepared(string $sql, string $types, array $params) {
         try {
             $stmt = $this->db_connect()->prepare($sql);
@@ -79,9 +74,8 @@ class cls_Mysql {
         }
     }
 
-    /**
-     * Consulta preparada DML: INSERT, UPDATE, DELETE
-     */
+  
+     //Consulta preparada DML: INSERT, UPDATE, DELETE    
     public function sql_execute_prepared_dml(string $sql, string $types, array $params): bool {
         try {
             $stmt = $this->db_connect()->prepare($sql);
@@ -99,9 +93,8 @@ class cls_Mysql {
         }
     }
 
-    /**
-     * Devuelve resultados como array indexado
-     */
+    
+    // Devuelve resultados como array indexado     
     public function sql_get_rows($result): array {
         try {
             $array = [];
@@ -115,9 +108,8 @@ class cls_Mysql {
         }
     }
 
-    /**
-     * Devuelve resultados como array asociativo
-     */
+   
+     //Devuelve resultados como array asociativo     
     public function sql_get_rows_assoc($result): array {
         try {
             $array = [];
@@ -131,9 +123,9 @@ class cls_Mysql {
         }
     }
 
-    /**
-     * Devuelve un único registro como array asociativo
-     */
+    
+    //Devuelve un único registro como array asociativo
+   
     public function sql_get_fetchassoc($result): ?array {
         try {
             return $result->fetch_assoc();
@@ -143,23 +135,20 @@ class cls_Mysql {
         }
     }
 
-    /**
-     * Devuelve número de filas afectadas
-     */
+    
+    //Devuelve número de filas afectad     
     public function sql_get_affected_rows(): int {
         return $this->conn->affected_rows;
     }
 
-    /**
-     * Devuelve el último ID insertado
-     */
+    
+    //Devuelve el último ID insertado    
     public function sql_get_last_id(): int {
         return $this->conn->insert_id;
     }
 
-    /**
-     * Cierra la conexión
-     */
+  
+   // Cierra la conexión    
     public function close(): void {
         if ($this->conn !== null) {
             $this->conn->close();
@@ -167,9 +156,8 @@ class cls_Mysql {
         }
     }
 
-    /**
-     * Destructor
-     */
+    
+   //Destructor     
     public function __destruct() {
         $this->close();
     }

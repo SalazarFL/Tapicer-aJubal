@@ -2,104 +2,79 @@
 require_once("../../../global.php");
 require_once(__CLS_PATH . "cls_html.php");
 require_once(__CLS_PATH . "cls_cliente.php");
-require_once(__CLS_PATH . "cls_venta.php"); // <-- Faltaba
-require_once(__CLS_PATH . "cls_usuario.php"); // <-- (por si ocupamos usuario luego)
+require_once(__CLS_PATH . "cls_venta.php");
+require_once(__CLS_PATH . "cls_servicio.php"); // Añadir esta línea
 
 $html = new cls_Html();
-$cliente = new cls_Cliente();
+$cliente = new cls_CLIente();
 $venta = new cls_Venta();
+$servicio = new cls_Servicio(); // Crear objeto
+$servicios = $servicio->obtenerServicios(); // Obtener lista de servicios
 
 // Obtener lista de clientes
 $clientes = $cliente->obtenerClientes();
 
-// Inicializar variables
+// Variables iniciales
 $id = intval($_GET['id'] ?? 0);
 $modo_editar = false;
 $ventaData = [];
 $detalles = [];
 
-
-
 if ($id > 0) {
-    // Si hay ID, estamos en modo de edición
     $modo_editar = true;
     $ventaData = $venta->obtenerVentaPorId($id);
     $detalles = $venta->obtenerDetalleVenta($id);
 
-    // Si no existe esa venta, redirigimos
     if (!$ventaData) {
         header("Location: " . __CTR_HOST_PATH . "ctrl_ventas.php?accion=listar");
         exit;
     }
 }
-
-require_once("../../../global.php");
-require_once(__CLS_PATH . "cls_html.php");
-require_once(__CLS_PATH . "cls_venta.php");
-
-$html = new cls_Html();
-$venta = new cls_Venta();
-
-$id_venta = intval($_GET['id'] ?? 0);
-if ($id_venta <= 0) {
-    header("Location: " . __CTR_HOST_PATH . "ctrl_ventas.php?accion=listar");
-    exit;
-}
-
-// Obtener datos de la venta
-$datosVenta = $venta->obtenerVentaPorId($id_venta);
-
-// Si no existe la venta, redirigir
-if (!$datosVenta) {
-    header("Location: " . __CTR_HOST_PATH . "ctrl_ventas.php?accion=listar");
-    exit;
-}
-
-// Validar si la venta ya está pagada
-if ($datosVenta['estado'] === 'pagado') {
-    echo "<script>alert('Esta venta ya está pagada. No se pueden registrar más abonos.'); window.location.href = '" . __CTR_HOST_PATH . "ctrl_ventas.php?accion=detalle&id=" . $id_venta . "';</script>";
-    exit;
-}
-
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registrar Nueva Venta</title>
+    <title><?= $modo_editar ? "Editar Venta" : "Registrar Nueva Venta" ?></title>
     <?= $html->html_css_header(__CSS_PATH . "style.css", "all"); ?>
 </head>
 <body>
 
+<?php include(__VWS_PATH . "navbar.php"); ?>
+
 <h2><?= $modo_editar ? "Editar Venta" : "Registrar Nueva Venta" ?></h2>
 
 <form method="POST" action="<?= __CTR_HOST_PATH ?>ctrl_ventas.php" id="form-venta">
-        <input type="hidden" name="accion" value="<?= $modo_editar ? 'actualizar_venta' : 'insertar_venta' ?>">
-            <?php if ($modo_editar): ?>
-                 <input type="hidden" name="id" value="<?= $id ?>">
-            <?php endif; ?>
+    <input type="hidden" name="accion" value="<?= $modo_editar ? 'actualizar_venta' : 'insertar_venta' ?>">
+    <?php if ($modo_editar): ?>
+        <input type="hidden" name="id" value="<?= $id ?>">
+    <?php endif; ?>
 
     <label>Cliente:</label>
     <select name="id_cliente" required>
         <option value="">Seleccione un cliente</option>
-            <?php foreach ($clientes as $cli): ?>
-        <option value="<?= $cli['id']; ?>" <?= ($modo_editar && $cli['id'] == $ventaData['id_cliente']) ? 'selected' : '' ?>>
-            <?= htmlspecialchars($cli['nombre_completo']); ?>
-        </option>
-            <?php endforeach; ?>
+        <?php foreach ($clientes as $cli): ?>
+            <option value="<?= $cli['id']; ?>" <?= ($modo_editar && $cli['id'] == $ventaData['id_cliente']) ? 'selected' : '' ?>>
+                <?= htmlspecialchars($cli['nombre_completo']); ?>
+            </option>
+        <?php endforeach; ?>
     </select>
-
 
     <h3>Detalles del Trabajo</h3>
     <div id="trabajos-container">
     <?php if ($modo_editar && !empty($detalles)): ?>
         <?php foreach ($detalles as $detalle): ?>
             <div class="trabajo">
-                <label>Tipo de Trabajo:</label>
-                <input type="text" name="tipo_trabajo[]" value="<?= htmlspecialchars($detalle['tipo_trabajo']) ?>" required>
+            <label>Tipo de Trabajo:</label>
+<select name="tipo_trabajo[]" required>
+    <option value="">Seleccione un servicio</option>
+    <?php foreach ($servicios as $serv): ?>
+        <option value="<?= htmlspecialchars($serv['nombre']); ?>">
+            <?= htmlspecialchars($serv['nombre']); ?>
+        </option>
+    <?php endforeach; ?>
+</select>
 
                 <label>Descripción:</label>
                 <textarea name="descripcion[]" required><?= htmlspecialchars($detalle['descripcion']) ?></textarea>
@@ -120,7 +95,14 @@ if ($datosVenta['estado'] === 'pagado') {
     <?php else: ?>
         <div class="trabajo">
             <label>Tipo de Trabajo:</label>
-            <input type="text" name="tipo_trabajo[]" required>
+            <select name="tipo_trabajo[]" required>
+    <option value="">Seleccione un servicio</option>
+    <?php foreach ($servicios as $serv): ?>
+        <option value="<?= htmlspecialchars($serv['nombre']); ?>">
+            <?= htmlspecialchars($serv['nombre']); ?>
+        </option>
+    <?php endforeach; ?>
+</select>
 
             <label>Descripción:</label>
             <textarea name="descripcion[]" required></textarea>
@@ -129,17 +111,16 @@ if ($datosVenta['estado'] === 'pagado') {
             <input type="text" name="medidas[]">
 
             <label>Materiales Usados:</label>
-            <textarea name="materiales_usados[]"></textarea>    
+            <textarea name="materiales_usados[]"></textarea>
 
-                <label>Costo Mano de Obra:</label>
-                <input type="number" name="costo_mano_obra[]" step="0.01" required>
+            <label>Costo Mano de Obra:</label>
+            <input type="number" name="costo_mano_obra[]" step="0.01" required>
 
-                <button type="button" class="btn btn-delete btn-quitar-trabajo">Quitar Trabajo</button>
-                <hr>
-            </div>
-        <?php endif; ?>
+            <button type="button" class="btn btn-delete btn-quitar-trabajo">Quitar Trabajo</button>
+            <hr>
+        </div>
+    <?php endif; ?>
     </div>
-
 
     <button type="button" class="btn btn-new" id="btn-agregar-trabajo">+ Agregar Otro Trabajo</button>
 
@@ -158,8 +139,14 @@ document.getElementById('btn-agregar-trabajo').addEventListener('click', functio
     const trabajoOriginal = container.querySelector('.trabajo');
     const nuevoTrabajo = trabajoOriginal.cloneNode(true);
 
-    // Limpiar campos
-    nuevoTrabajo.querySelectorAll('input, textarea').forEach(el => el.value = "");
+    // Limpiar campos (inputs, textareas y selects)
+    nuevoTrabajo.querySelectorAll('input, textarea, select').forEach(el => {
+        if (el.tagName.toLowerCase() === 'select') {
+            el.selectedIndex = 0; // Para selects: volver a la opción inicial
+        } else {
+            el.value = ""; // Para inputs y textareas: limpiar texto
+        }
+    });
 
     container.appendChild(nuevoTrabajo);
 
@@ -193,5 +180,8 @@ function calcularTotal() {
 }
 </script>
 
+
+
+<?php include(__VWS_PATH . "footer.php"); ?>
 </body>
 </html>

@@ -12,7 +12,7 @@ class cls_Material {
     public function insertarMaterial(string $nombre, string $tipo, int $cantidad, float $precio, ?string $imagen = null): bool {
         $sql = "INSERT INTO materiales (nombre, tipo, cantidad_disponible, precio_unitario, imagen) VALUES (?, ?, ?, ?, ?)";
         $params = [$nombre, $tipo, $cantidad, $precio, $imagen];
-        $types = "ssids"; // string, string, int, double, string (imagen puede ser nula)
+        $types = "ssids";
 
         return $this->db->sql_execute_prepared_dml($sql, $types, $params);
     }
